@@ -64,7 +64,7 @@ func (m Model) loadingView() string {
 }
 
 func (m Model) inboxView() string {
-	help := "\n[c] compose • [d] delete • [m] mark read/unread • [l] labels • [/] search • [?] help • [q] quit\n"
+	help := "\n[c] compose • [a] archive • [d] delete • [m] mark read/unread • [l] labels • [/] search • [?] help • [q] quit\n"
 	return m.emailList.View() + m.statusBar() + help
 }
 
@@ -99,7 +99,7 @@ func (m Model) emailView() string {
 	}
 
 	b.WriteString(m.statusBar())
-	b.WriteString("\n[esc] back • [r] reply • [d] delete • [m] mark read/unread • [ctrl+d] download attachment • [q] quit\n")
+	b.WriteString("\n[esc] back • [r] reply • [a] archive • [d] delete • [m] mark read/unread • [ctrl+d] download attachment • [q] quit\n")
 	return b.String()
 }
 

@@ -45,6 +45,20 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.statusMessage = "Email sent!"
 		return m, tea.Batch(m.spinner.Tick, fetchInbox(m.client), clearStatusAfter(3*time.Second))
 
+	case emailArchivedMsg:
+		items := m.emailList.Items()
+		for i, item := range items {
+			if ei, ok := item.(emailItem); ok && ei.email.ID == msg.id {
+				m.emailList.RemoveItem(i)
+				break
+			}
+		}
+		if m.state == stateViewing {
+			m.state = stateInbox
+		}
+		m.statusMessage = "Email archived"
+		return m, clearStatusAfter(3 * time.Second)
+
 	case emailDeletedMsg:
 		items := m.emailList.Items()
 		for i, item := range items {
@@ -190,14 +204,12 @@ func (m Model) updateInbox(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			return m, tea.Batch(m.spinner.Tick, openEmail(m.client, ei.email.ID))
 		}
 
-	case key.Matches(msg, keys.Delete):
+	case key.Matches(msg, keys.Archive):
 		if ei, ok := m.emailList.SelectedItem().(emailItem); ok {
-			m.confirmDelete = true
-			m.deleteTargetID = ei.email.ID
-			m.deleteSubject = ei.email.Subject
-			m.statusMessage = fmt.Sprintf("Delete \"%s\"? [y/n]", truncate(ei.email.Subject, 40))
-			return m, nil
+			return m, archiveEmailCmd(m.client, ei.email.ID)
 		}
+
+	case key.Matches(msg, keys.Delete):
 
 	case key.Matches(msg, keys.ToggleRead):
 		if ei, ok := m.emailList.SelectedItem().(emailItem); ok {
@@ -225,6 +237,11 @@ func (m Model) updateViewing(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.addingAttach = false
 		m.replyBody.Focus()
 		return m, nil
+
+	case key.Matches(msg, keys.Archive):
+		if m.currentEmail != nil {
+			return m, archiveEmailCmd(m.client, m.currentEmail.ID)
+		}
 
 	case key.Matches(msg, keys.Delete):
 		m.confirmDelete = true

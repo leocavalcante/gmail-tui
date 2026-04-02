@@ -102,6 +102,18 @@ func (c *Client) DeleteEmail(id string) error {
 	return err
 }
 
+// ArchiveEmail removes the INBOX label, effectively archiving the email.
+func (c *Client) ArchiveEmail(id string) error {
+	mod := &gmail.ModifyMessageRequest{
+		RemoveLabelIds: []string{"INBOX"},
+	}
+	_, err := c.srv.Users.Messages.Modify("me", id, mod).Do()
+	if err == nil {
+		c.cache.Delete(id)
+	}
+	return err
+}
+
 // ToggleRead flips the UNREAD label. Returns the new isUnread state.
 func (c *Client) ToggleRead(id string, currentlyUnread bool) (newUnread bool, err error) {
 	mod := &gmail.ModifyMessageRequest{}
