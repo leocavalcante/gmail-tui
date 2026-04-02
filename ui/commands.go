@@ -21,6 +21,7 @@ type inboxLoadedMsg struct{ emails []api.Email }
 type emailOpenedMsg struct{ email *api.Email }
 type emailSentMsg struct{}
 type emailDeletedMsg struct{ id string }
+type emailArchivedMsg struct{ id string }
 type readToggledMsg struct {
 	id       string
 	isUnread bool
@@ -69,6 +70,15 @@ func deleteEmailCmd(client *api.Client, id string) tea.Cmd {
 			return errMsg{err: err}
 		}
 		return emailDeletedMsg{id: id}
+	}
+}
+
+func archiveEmailCmd(client *api.Client, id string) tea.Cmd {
+	return func() tea.Msg {
+		if err := client.ArchiveEmail(id); err != nil {
+			return errMsg{err: err}
+		}
+		return emailArchivedMsg{id: id}
 	}
 }
 

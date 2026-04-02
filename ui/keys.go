@@ -9,6 +9,7 @@ type keyMap struct {
 	Back               key.Binding
 	Reply              key.Binding
 	Compose            key.Binding
+	Archive            key.Binding
 	Delete             key.Binding
 	Search             key.Binding
 	Labels             key.Binding
@@ -33,7 +34,7 @@ func (k keyMap) ShortHelp() []key.Binding {
 func (k keyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.Compose, k.Reply, k.Search, k.Labels, k.Unread},
-		{k.Delete, k.ToggleRead, k.Back, k.Quit},
+		{k.Archive, k.Delete, k.ToggleRead, k.Back, k.Quit},
 		{k.Send, k.NextInput, k.PrevInput},
 		{k.AddAttachment, k.RemoveAttachment, k.DownloadAttachment},
 	}
@@ -45,6 +46,7 @@ var keys = keyMap{
 	Back:               key.NewBinding(key.WithKeys("b", "esc"), key.WithHelp("b/esc", "back")),
 	Reply:              key.NewBinding(key.WithKeys("r"), key.WithHelp("r", "reply")),
 	Compose:            key.NewBinding(key.WithKeys("c"), key.WithHelp("c", "compose")),
+	Archive:            key.NewBinding(key.WithKeys("a"), key.WithHelp("a", "archive")),
 	Delete:             key.NewBinding(key.WithKeys("d"), key.WithHelp("d", "delete")),
 	Search:             key.NewBinding(key.WithKeys("/"), key.WithHelp("/", "search")),
 	Labels:             key.NewBinding(key.WithKeys("l"), key.WithHelp("l", "labels")),
