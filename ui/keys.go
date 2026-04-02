@@ -23,15 +23,16 @@ type keyMap struct {
 	AddAttachment      key.Binding
 	RemoveAttachment   key.Binding
 	DownloadAttachment key.Binding
+	Unread             key.Binding
 }
 
 func (k keyMap) ShortHelp() []key.Binding {
-	return []key.Binding{k.ShowHelp, k.Compose, k.Search, k.Labels, k.Quit}
+	return []key.Binding{k.ShowHelp, k.Compose, k.Search, k.Labels, k.Unread, k.Quit}
 }
 
 func (k keyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.Compose, k.Reply, k.Search, k.Labels},
+		{k.Compose, k.Reply, k.Search, k.Labels, k.Unread},
 		{k.Delete, k.ToggleRead, k.Back, k.Quit},
 		{k.Send, k.NextInput, k.PrevInput},
 		{k.AddAttachment, k.RemoveAttachment, k.DownloadAttachment},
@@ -58,4 +59,5 @@ var keys = keyMap{
 	AddAttachment:      key.NewBinding(key.WithKeys("ctrl+a"), key.WithHelp("ctrl+a", "add attachment")),
 	RemoveAttachment:   key.NewBinding(key.WithKeys("ctrl+x"), key.WithHelp("ctrl+x", "remove attachment")),
 	DownloadAttachment: key.NewBinding(key.WithKeys("ctrl+d"), key.WithHelp("ctrl+d", "download attachment")),
+	Unread:             key.NewBinding(key.WithKeys("u"), key.WithHelp("u", "unread")),
 }

@@ -64,7 +64,7 @@ func (m Model) loadingView() string {
 }
 
 func (m Model) inboxView() string {
-	help := "\n[c] compose • [d] delete • [m] mark read/unread • [l] labels • [/] search • [?] help • [q] quit\n"
+	help := "\n[c] compose • [d] delete • [m] mark read/unread • [l] labels • [/] search • [u] unread • [?] help • [q] quit\n"
 	return m.emailList.View() + m.statusBar() + help
 }
 
