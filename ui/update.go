@@ -203,6 +203,10 @@ func (m Model) updateInbox(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		if ei, ok := m.emailList.SelectedItem().(emailItem); ok {
 			return m, toggleReadCmd(m.client, ei.email.ID, ei.email.IsUnread)
 		}
+
+	case key.Matches(msg, keys.Unread):
+		m.state = stateLoading
+		return m, tea.Batch(m.spinner.Tick, searchCmd(m.client, "is:unread"))
 	}
 
 	var cmd tea.Cmd
