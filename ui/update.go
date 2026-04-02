@@ -112,16 +112,10 @@ func (m Model) handleResize(msg tea.WindowSizeMsg) (tea.Model, tea.Cmd) {
 	m.width = msg.Width
 	m.height = msg.Height
 	m.help.Width = msg.Width
-
-	switch m.state {
-	case stateInbox:
-		m.emailList.SetSize(msg.Width, msg.Height-3)
-	case stateViewing:
-		m.viewport.Width = msg.Width
-		m.viewport.Height = msg.Height - 7
-	case stateLabels:
-		m.labelList.SetSize(msg.Width, msg.Height-3)
-	}
+	m.emailList.SetSize(msg.Width, msg.Height-3)
+	m.labelList.SetSize(msg.Width, msg.Height-3)
+	m.viewport.Width = msg.Width
+	m.viewport.Height = msg.Height - 7
 	return m, nil
 }
 
@@ -327,7 +321,7 @@ func (m Model) updateReplying(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		quoted := fmt.Sprintf(
 			"\n\n--- Original Message ---\nFrom: %s\nDate: %s\n\n%s",
 			m.replyTo.From, m.replyTo.Date,
-			api.IndentText(m.currentEmail.Body),
+			api.IndentText(m.replyTo.Body),
 		)
 		subject := m.replyTo.Subject
 		if !strings.HasPrefix(strings.ToLower(subject), "re:") {
