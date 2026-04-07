@@ -12,6 +12,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/glamour"
 )
 
 // Update handles all messages. Never performs blocking work.
@@ -36,7 +37,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.state = stateViewing
 		m.viewport.Width = m.width
 		m.viewport.Height = m.height - 7
-		m.viewport.SetContent(msg.email.Body)
+		body := renderMarkdown(msg.email.Body, m.width)
+		m.viewport.SetContent(body)
 		m.viewport.GotoTop()
 		return m, nil
 
@@ -530,4 +532,19 @@ func truncate(s string, max int) string {
 		return s
 	}
 	return s[:max-3] + "..."
+}
+
+func renderMarkdown(body string, width int) string {
+	r, err := glamour.NewTermRenderer(
+		glamour.WithAutoStyle(),
+		glamour.WithWordWrap(width),
+	)
+	if err != nil {
+		return body
+	}
+	rendered, err := r.Render(body)
+	if err != nil {
+		return body
+	}
+	return rendered
 }
